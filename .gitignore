@@ -1,3 +1,6 @@
+.DS_Store
+*.db
+
 # NuGet packages directory
 [Pp]ackages/
 
