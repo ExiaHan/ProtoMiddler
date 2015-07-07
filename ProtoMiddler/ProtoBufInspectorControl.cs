@@ -64,16 +64,19 @@ namespace ProtoMiddler
                 if (File.Exists(this.ProtoFile))
                 {
                     string rawProtoFile = File.ReadAllText(this.ProtoFile);
-                    string[] tokens = rawProtoFile.Split(" \t\n{},".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+                    string[] tokens = rawProtoFile.Split(" \r\t\n{},".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+                    var list = new List<string>();
                     for (int x = 0; x < tokens.Length; x++)
                     {
                         if (tokens[x].CompareTo("message") == 0)
                         {
                             string t = tokens[x + 1];
-                            cbType.Items.Add(t);
-                            cbType.Enabled = true;
+                            list.Add(t.Trim());
                         }
                     }
+                    list.Sort();
+                    cbType.Items.AddRange(list.ToArray());
+                    cbType.Enabled = true;
                 }
 
             }
