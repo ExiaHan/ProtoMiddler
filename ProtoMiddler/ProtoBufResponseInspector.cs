@@ -22,7 +22,7 @@ using System.IO;
 
 [assembly: Fiddler.RequiredVersion("2.3.0.0")]
 //
-// C:\Program Files (x86)\protobuf-net\protobuf-net-VS9>type C:\me\ProtoBufTest\DecodedAccount.txt | protoc.exe --encode=Account --proto_path=C:\me\ProtoBufTest C:\me\ProtoBufTest\Account.proto > c:\me\account.bin
+// type DecodedAccount.txt | protoc --encode=Account --proto_path=ProtoBufTest ProtoBufTest\Account.proto > account.bin
 //
 
 namespace ProtoMiddler

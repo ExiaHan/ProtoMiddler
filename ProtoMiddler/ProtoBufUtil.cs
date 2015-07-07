@@ -29,8 +29,8 @@ namespace ProtoMiddler
             string retval = string.Empty;
 
             ProcessStartInfo procStartInfo = new System.Diagnostics.ProcessStartInfo();
-            procStartInfo.WorkingDirectory = @"C:\Program Files (x86)\protobuf-net\protobuf-net-VS9";
-            procStartInfo.FileName = @"C:\Program Files (x86)\protobuf-net\protobuf-net-VS9\protoc.exe";
+            procStartInfo.WorkingDirectory = PROTOC_DIR;
+            procStartInfo.FileName = PROTOC;
             procStartInfo.Arguments = @"--decode_raw";
             procStartInfo.RedirectStandardInput = true;
             procStartInfo.RedirectStandardError = true;
@@ -63,13 +63,16 @@ namespace ProtoMiddler
 
         }
 
+        private const string PROTOC_DIR = @"C:\cygwin\Opt\protobuf-net";
+        private const string PROTOC = @"C:\cygwin\Opt\protobuf-net\protoc.exe";
+
         public static string DecodeWithProto(byte[] protobuf, string messageType, string protoFile)
         {
             string retval = string.Empty;
 
             ProcessStartInfo procStartInfo = new System.Diagnostics.ProcessStartInfo();
-            procStartInfo.WorkingDirectory = @"C:\Program Files (x86)\protobuf-net\protobuf-net-VS9";
-            procStartInfo.FileName = @"C:\Program Files (x86)\protobuf-net\protobuf-net-VS9\protoc.exe";
+            procStartInfo.WorkingDirectory = PROTOC_DIR;
+            procStartInfo.FileName = PROTOC;
             procStartInfo.Arguments = string.Format(@"--decode={0} --proto_path={1} {2}", messageType, GetFilePath(protoFile), protoFile);
             procStartInfo.RedirectStandardInput = true;
             procStartInfo.RedirectStandardError = true;
@@ -94,9 +97,9 @@ namespace ProtoMiddler
             string retval = string.Empty;
 
             ProcessStartInfo procStartInfo = new System.Diagnostics.ProcessStartInfo();
-            procStartInfo.WorkingDirectory = @"C:\Program Files (x86)\protobuf-net\protobuf-net-VS9";
-            procStartInfo.FileName = @"C:\Program Files (x86)\protobuf-net\protobuf-net-VS9\protoc.exe";
-            procStartInfo.Arguments = @"--decode=Account --proto_path=c:\me\ProtoBufTest c:\me\ProtoBufTest\Account.proto";
+            procStartInfo.WorkingDirectory = PROTOC_DIR;
+            procStartInfo.FileName = PROTOC;
+            procStartInfo.Arguments = @"--decode=Account --proto_path=ProtoBufTest ProtoBufTest\Account.proto";
             procStartInfo.RedirectStandardInput = true;
             procStartInfo.RedirectStandardError = true;
             procStartInfo.RedirectStandardOutput = true;
@@ -119,11 +122,11 @@ namespace ProtoMiddler
         {
             byte[] retval = null;
 
-            // protoc.exe --encode=Account --proto_path=C:\me\ProtoBufTest C:\me\ProtoBufTest\Account.proto
+            // protoc --encode=Account --proto_path=ProtoBufTest ProtoBufTest\Account.proto
 
             ProcessStartInfo procStartInfo = new System.Diagnostics.ProcessStartInfo();
-            procStartInfo.WorkingDirectory = @"C:\Program Files (x86)\protobuf-net\protobuf-net-VS9";
-            procStartInfo.FileName = @"C:\Program Files (x86)\protobuf-net\protobuf-net-VS9\protoc.exe";
+            procStartInfo.WorkingDirectory = PROTOC_DIR;
+            procStartInfo.FileName = PROTOC;
             procStartInfo.Arguments = string.Format(@"--encode={0} --proto_path={1} {2}", messageType, GetFilePath(protoFile), protoFile);
             procStartInfo.RedirectStandardInput = true;
             procStartInfo.RedirectStandardError = true;
@@ -159,12 +162,12 @@ namespace ProtoMiddler
         {
             byte[] retval = null;
 
-            // protoc.exe --encode=Account --proto_path=C:\me\ProtoBufTest C:\me\ProtoBufTest\Account.proto
+            // protoc --encode=Account --proto_path=ProtoBufTest ProtoBufTest\Account.proto
 
             ProcessStartInfo procStartInfo = new System.Diagnostics.ProcessStartInfo();
-            procStartInfo.WorkingDirectory = @"C:\Program Files (x86)\protobuf-net\protobuf-net-VS9";
-            procStartInfo.FileName = @"C:\Program Files (x86)\protobuf-net\protobuf-net-VS9\protoc.exe";
-            procStartInfo.Arguments = @"--encode=Account --proto_path=c:\me\ProtoBufTest c:\me\ProtoBufTest\Account.proto";
+            procStartInfo.WorkingDirectory = PROTOC_DIR;
+            procStartInfo.FileName = PROTOC;
+            procStartInfo.Arguments = @"--encode=Account --proto_path=ProtoBufTest ProtoBufTest\Account.proto";
             procStartInfo.RedirectStandardInput = true;
             procStartInfo.RedirectStandardError = true;
             procStartInfo.RedirectStandardOutput = true;
