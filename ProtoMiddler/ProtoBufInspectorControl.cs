@@ -1,70 +1,56 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Drawing;
-using System.Data;
-using System.Linq;
-using System.Text;
-using System.Windows.Forms;
 using System.IO;
+using System.Windows.Forms;
 
 namespace ProtoMiddler
 {
     public partial class ProtoBufInspectorControl : UserControl
     {
+        public string MessageType;
+        public string ProtoFile;
+
         public ProtoBufInspectorControl()
         {
             InitializeComponent();
-            this.ProtoFile = string.Empty;
-            this.MessageType = string.Empty;
+            ProtoFile = string.Empty;
+            MessageType = string.Empty;
         }
 
-        public byte[] ProtobufBytes
-        {
-            get;
-            set;
-        }
+        public byte[] ProtobufBytes { get; set; }
 
         public string Data
         {
-            get
-            {
-                return this.rtbData.Text;
-            }
+            get { return rtbData.Text; }
 
-            set
-            {
-                this.rtbData.Text = value;
-            }
+            set { rtbData.Text = value; }
         }
-
-        public string ProtoFile;
-        public string MessageType;
 
         public byte[] Encode()
         {
-            if (string.IsNullOrEmpty(this.ProtoFile) || string.IsNullOrEmpty(this.MessageType))
+            if (string.IsNullOrEmpty(ProtoFile) || string.IsNullOrEmpty(MessageType))
             {
                 return ProtobufBytes;
             }
 
             // try to encode using these things...
 
-            return ProtoBufUtil.EncodeWithProto(this.Data, this.MessageType, this.ProtoFile);
+            return ProtoBufUtil.EncodeWithProto(Data, MessageType, ProtoFile);
         }
 
-        private void bnBrowse_Click(object sender, EventArgs e)
+        void bnBrowse_Click(object sender, EventArgs e)
         {
             if (DialogResult.OK == openFileDialog1.ShowDialog())
             {
                 txtProtoFile.Text = openFileDialog1.FileName;
 
-                this.ProtoFile = txtProtoFile.Text.Trim();
+                ProtoFile = txtProtoFile.Text.Trim();
                 // also parse the proto file to fill in the cbType combo box
-                if (File.Exists(this.ProtoFile))
+                if (File.Exists(ProtoFile))
                 {
-                    string rawProtoFile = File.ReadAllText(this.ProtoFile);
-                    string[] tokens = rawProtoFile.Split(" \r\t\n{},".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+                    string rawProtoFile = File.ReadAllText(ProtoFile);
+                    string[] tokens = rawProtoFile.Split(" \r\t\n{},".ToCharArray(),
+                        StringSplitOptions.RemoveEmptyEntries);
                     var list = new List<string>();
                     for (int x = 0; x < tokens.Length; x++)
                     {
@@ -78,16 +64,15 @@ namespace ProtoMiddler
                     cbType.Items.AddRange(list.ToArray());
                     cbType.Enabled = true;
                 }
-
             }
         }
 
-        private void bnDecodeAs_Click(object sender, EventArgs e)
+        void bnDecodeAs_Click(object sender, EventArgs e)
         {
-            this.MessageType = (string) cbType.SelectedItem;
-            this.ProtoFile = txtProtoFile.Text;
+            MessageType = (string) cbType.SelectedItem;
+            ProtoFile = txtProtoFile.Text;
 
-            this.Data = ProtoBufUtil.DecodeWithProto(this.ProtobufBytes, this.MessageType, this.ProtoFile);
+            Data = ProtoBufUtil.DecodeWithProto(ProtobufBytes, MessageType, ProtoFile);
         }
     }
 }

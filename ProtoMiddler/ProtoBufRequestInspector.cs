@@ -11,29 +11,53 @@ Email: jboyd[at]securityinnovation[dot]com
 
  * */
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Windows.Forms;
 using Fiddler;
-using System.Windows.Forms;
-using System.Diagnostics;
-using System.IO;
-
-//
-// type DecodedAccount.txt | protoc --encode=Account --proto_path=ProtoBufTest ProtoBufTest\Account.proto > account.bin
-//
 
 namespace ProtoMiddler
 {
-    public class ProtoBufRequestInspector :  Inspector2, IRequestInspector2
+    public class ProtoBufRequestInspector : Inspector2, IRequestInspector2
     {
-        private ProtoBufInspectorControl _myControl;
-        private byte[] _entityBody;
+        byte[] _entityBody;
+        ProtoBufInspectorControl _myControl;
+
+        public ProtoBufRequestInspector()
+        {
+            bReadOnly = false;
+        }
+
+        public void Clear()
+        {
+            _myControl.Data = string.Empty;
+        }
+
+        public byte[] body
+        {
+            get
+            {
+                if (_myControl.Text.CompareTo("NA") != 0)
+                {
+                    return _myControl.Encode();
+                    //return ProtoBufUtil.Encode(_myControl.Data);
+                    // return the protobuf encoded
+                }
+                return _entityBody;
+            }
+            set { _entityBody = value; }
+        }
+
+        public bool bDirty
+        {
+            get { return true; }
+        }
+
+        public bool bReadOnly { get; set; }
+
+
+        HTTPRequestHeaders IRequestInspector2.headers { get; set; }
 
         public override void AssignSession(Session oSession)
         {
-
             byte[] protobufBytes = null;
 
             if (oSession.oRequest["Content-Type"].ToLower().Contains("protobuf"))
@@ -43,11 +67,10 @@ namespace ProtoMiddler
                 _entityBody = protobufBytes;
                 _myControl.Data = ProtoBufUtil.DecodeRaw(protobufBytes);
                 _myControl.ProtobufBytes = protobufBytes;
-                
             }
             else
             {
-                _myControl.Data = "NA";  // oSession.requestBodyBytes
+                _myControl.Data = "NA"; // oSession.requestBodyBytes
             }
         }
 
@@ -63,57 +86,6 @@ namespace ProtoMiddler
         public override int GetOrder()
         {
             return 0;
-        }
-
-        public void Clear()
-        {
-            _myControl.Data = string.Empty;
-        }
-
-        public byte[] body
-        {
-            get 
-            {
-                if (_myControl.Text.CompareTo("NA") != 0)
-                {
-                    return _myControl.Encode();
-                    //return ProtoBufUtil.Encode(_myControl.Data);
-                    // return the protobuf encoded
-                }
-                return _entityBody; 
-            }
-            set 
-            {
-                this._entityBody = value; 
-            }
-        }
-
-        public bool bDirty
-        {
-            get { return true; }
-        }
-
-        bool m_bReadOnly = false;
-
-        public bool bReadOnly
-        {
-            get { return m_bReadOnly; }
-            set { m_bReadOnly = value; }
-        }
-
-
-        HTTPRequestHeaders m_RequestHeaders;
-
-        HTTPRequestHeaders IRequestInspector2.headers
-        {
-            get
-            {
-                return m_RequestHeaders;
-            }
-            set
-            {
-                m_RequestHeaders = value;
-            }
         }
     }
 }

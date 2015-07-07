@@ -11,24 +11,22 @@ Email: jboyd[at]securityinnovation[dot]com
 
  * */
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System;
 using System.Diagnostics;
 using System.IO;
-using System.Windows.Forms;
 
 namespace ProtoMiddler
 {
     public static class ProtoBufUtil
     {
+        const string PROTOC_DIR = @"C:\cygwin\Opt\protobuf-net";
+        const string PROTOC = @"C:\cygwin\Opt\protobuf-net\protoc.exe";
 
         public static string DecodeRaw(byte[] protobuf)
         {
             string retval = string.Empty;
 
-            ProcessStartInfo procStartInfo = new System.Diagnostics.ProcessStartInfo();
+            var procStartInfo = new ProcessStartInfo();
             procStartInfo.WorkingDirectory = PROTOC_DIR;
             procStartInfo.FileName = PROTOC;
             procStartInfo.Arguments = @"--decode_raw";
@@ -38,10 +36,10 @@ namespace ProtoMiddler
             procStartInfo.UseShellExecute = false;
             procStartInfo.CreateNoWindow = true;
 
-            System.Diagnostics.Process proc = System.Diagnostics.Process.Start(procStartInfo);
+            Process proc = Process.Start(procStartInfo);
 
             // proc.StandardInput.BaseStream.Write(protobufBytes, 0, protobufBytes.Length);
-            BinaryWriter binaryWriter = new BinaryWriter(proc.StandardInput.BaseStream);
+            var binaryWriter = new BinaryWriter(proc.StandardInput.BaseStream);
             binaryWriter.Write(protobuf);
             binaryWriter.Flush();
             binaryWriter.Close();
@@ -50,40 +48,36 @@ namespace ProtoMiddler
             return retval;
         }
 
-        private static string GetFilePath(string fileName)
+        static string GetFilePath(string fileName)
         {
-
-            FileInfo fileInfo = new FileInfo(fileName);
+            var fileInfo = new FileInfo(fileName);
             string f = fileInfo.Name;
             string filePath = fileInfo.FullName.Replace(f, string.Empty);
 
-         //   MessageBox.Show(filePath);
+            //   MessageBox.Show(filePath);
 
             return filePath;
-
         }
-
-        private const string PROTOC_DIR = @"C:\cygwin\Opt\protobuf-net";
-        private const string PROTOC = @"C:\cygwin\Opt\protobuf-net\protoc.exe";
 
         public static string DecodeWithProto(byte[] protobuf, string messageType, string protoFile)
         {
             string retval = string.Empty;
 
-            ProcessStartInfo procStartInfo = new System.Diagnostics.ProcessStartInfo();
+            var procStartInfo = new ProcessStartInfo();
             procStartInfo.WorkingDirectory = PROTOC_DIR;
             procStartInfo.FileName = PROTOC;
-            procStartInfo.Arguments = string.Format(@"--decode={0} --proto_path={1} {2}", messageType, GetFilePath(protoFile), protoFile);
+            procStartInfo.Arguments = string.Format(@"--decode={0} --proto_path={1} {2}", messageType,
+                GetFilePath(protoFile), protoFile);
             procStartInfo.RedirectStandardInput = true;
             procStartInfo.RedirectStandardError = true;
             procStartInfo.RedirectStandardOutput = true;
             procStartInfo.UseShellExecute = false;
             procStartInfo.CreateNoWindow = true;
 
-            System.Diagnostics.Process proc = System.Diagnostics.Process.Start(procStartInfo);
+            Process proc = Process.Start(procStartInfo);
 
             // proc.StandardInput.BaseStream.Write(protobufBytes, 0, protobufBytes.Length);
-            BinaryWriter binaryWriter = new BinaryWriter(proc.StandardInput.BaseStream);
+            var binaryWriter = new BinaryWriter(proc.StandardInput.BaseStream);
             binaryWriter.Write(protobuf);
             binaryWriter.Flush();
             binaryWriter.Close();
@@ -92,11 +86,11 @@ namespace ProtoMiddler
             return retval;
         }
 
-        public static string Decode(byte [] protobuf)
+        public static string Decode(byte[] protobuf)
         {
             string retval = string.Empty;
 
-            ProcessStartInfo procStartInfo = new System.Diagnostics.ProcessStartInfo();
+            var procStartInfo = new ProcessStartInfo();
             procStartInfo.WorkingDirectory = PROTOC_DIR;
             procStartInfo.FileName = PROTOC;
             procStartInfo.Arguments = @"--decode=Account --proto_path=ProtoBufTest ProtoBufTest\Account.proto";
@@ -106,10 +100,10 @@ namespace ProtoMiddler
             procStartInfo.UseShellExecute = false;
             procStartInfo.CreateNoWindow = true;
 
-            System.Diagnostics.Process proc = System.Diagnostics.Process.Start(procStartInfo);
+            Process proc = Process.Start(procStartInfo);
 
             // proc.StandardInput.BaseStream.Write(protobufBytes, 0, protobufBytes.Length);
-            BinaryWriter binaryWriter = new BinaryWriter(proc.StandardInput.BaseStream);
+            var binaryWriter = new BinaryWriter(proc.StandardInput.BaseStream);
             binaryWriter.Write(protobuf);
             binaryWriter.Flush();
             binaryWriter.Close();
@@ -124,10 +118,11 @@ namespace ProtoMiddler
 
             // protoc --encode=Account --proto_path=ProtoBufTest ProtoBufTest\Account.proto
 
-            ProcessStartInfo procStartInfo = new System.Diagnostics.ProcessStartInfo();
+            var procStartInfo = new ProcessStartInfo();
             procStartInfo.WorkingDirectory = PROTOC_DIR;
             procStartInfo.FileName = PROTOC;
-            procStartInfo.Arguments = string.Format(@"--encode={0} --proto_path={1} {2}", messageType, GetFilePath(protoFile), protoFile);
+            procStartInfo.Arguments = string.Format(@"--encode={0} --proto_path={1} {2}", messageType,
+                GetFilePath(protoFile), protoFile);
             procStartInfo.RedirectStandardInput = true;
             procStartInfo.RedirectStandardError = true;
             procStartInfo.RedirectStandardOutput = true;
@@ -136,16 +131,16 @@ namespace ProtoMiddler
             //
             // write the decoded protobuf string to protoc for it to comiple into protobuf binary format.
             //
-            System.Diagnostics.Process proc = System.Diagnostics.Process.Start(procStartInfo);
-            StreamWriter streamWriter = new StreamWriter(proc.StandardInput.BaseStream);
+            Process proc = Process.Start(procStartInfo);
+            var streamWriter = new StreamWriter(proc.StandardInput.BaseStream);
             streamWriter.Write(strProtobuf);
             streamWriter.Flush();
             streamWriter.Close();
 
             // Now, read off it's standard output for the binary stream.
 
-            BinaryReader binaryReader = new BinaryReader(proc.StandardOutput.BaseStream);
-            byte[] buf = new byte[4096];
+            var binaryReader = new BinaryReader(proc.StandardOutput.BaseStream);
+            var buf = new byte[4096];
             int protoBufBytesRead = binaryReader.Read(buf, 0, 4096);
 
             if (protoBufBytesRead > 0)
@@ -164,7 +159,7 @@ namespace ProtoMiddler
 
             // protoc --encode=Account --proto_path=ProtoBufTest ProtoBufTest\Account.proto
 
-            ProcessStartInfo procStartInfo = new System.Diagnostics.ProcessStartInfo();
+            var procStartInfo = new ProcessStartInfo();
             procStartInfo.WorkingDirectory = PROTOC_DIR;
             procStartInfo.FileName = PROTOC;
             procStartInfo.Arguments = @"--encode=Account --proto_path=ProtoBufTest ProtoBufTest\Account.proto";
@@ -176,16 +171,16 @@ namespace ProtoMiddler
             //
             // write the decoded protobuf string to protoc for it to comiple into protobuf binary format.
             //
-            System.Diagnostics.Process proc = System.Diagnostics.Process.Start(procStartInfo);
-            StreamWriter streamWriter = new StreamWriter(proc.StandardInput.BaseStream);
+            Process proc = Process.Start(procStartInfo);
+            var streamWriter = new StreamWriter(proc.StandardInput.BaseStream);
             streamWriter.Write(strProtobuf);
             streamWriter.Flush();
             streamWriter.Close();
 
             // Now, read off it's standard output for the binary stream.
 
-            BinaryReader binaryReader = new BinaryReader(proc.StandardOutput.BaseStream);
-            byte[] buf = new byte[4096];
+            var binaryReader = new BinaryReader(proc.StandardOutput.BaseStream);
+            var buf = new byte[4096];
             int protoBufBytesRead = binaryReader.Read(buf, 0, 4096);
 
             if (protoBufBytesRead > 0)
