@@ -1,4 +1,22 @@
-# This ignores things from Visual Studio
-ProtoMiddler/bin/
-ProtoMiddler/obj/
-ProtoMiddler/Properties/
+# NuGet packages directory
+[Pp]ackages/
+
+# Build results
+[Dd]ebug/
+[Rr]elease/
+x64/
+[Bb]in/
+[Oo]bj/
+
+# MSTest test Results
+[Tt]est[Rr]esult*/
+[Bb]uild[Ll]og.*
+
+# User-specific files
+*.suo
+*.user
+
+# git crash
+*.stackdump
+*~
+
