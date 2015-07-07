@@ -48,7 +48,7 @@
             this.rtbData.Dock = System.Windows.Forms.DockStyle.Fill;
             this.rtbData.Location = new System.Drawing.Point(0, 0);
             this.rtbData.Name = "rtbData";
-            this.rtbData.Size = new System.Drawing.Size(849, 315);
+            this.rtbData.Size = new System.Drawing.Size(650, 326);
             this.rtbData.TabIndex = 0;
             this.rtbData.Text = "";
             // 
@@ -65,12 +65,12 @@
             // 
             this.txtProtoFile.Location = new System.Drawing.Point(102, 13);
             this.txtProtoFile.Name = "txtProtoFile";
-            this.txtProtoFile.Size = new System.Drawing.Size(576, 20);
+            this.txtProtoFile.Size = new System.Drawing.Size(450, 20);
             this.txtProtoFile.TabIndex = 2;
             // 
             // bnBrowse
             // 
-            this.bnBrowse.Location = new System.Drawing.Point(693, 13);
+            this.bnBrowse.Location = new System.Drawing.Point(558, 13);
             this.bnBrowse.Name = "bnBrowse";
             this.bnBrowse.Size = new System.Drawing.Size(75, 23);
             this.bnBrowse.TabIndex = 3;
@@ -98,12 +98,12 @@
             this.cbType.FormattingEnabled = true;
             this.cbType.Location = new System.Drawing.Point(102, 39);
             this.cbType.Name = "cbType";
-            this.cbType.Size = new System.Drawing.Size(576, 21);
+            this.cbType.Size = new System.Drawing.Size(450, 21);
             this.cbType.TabIndex = 5;
             // 
             // bnDecodeAs
             // 
-            this.bnDecodeAs.Location = new System.Drawing.Point(693, 42);
+            this.bnDecodeAs.Location = new System.Drawing.Point(558, 42);
             this.bnDecodeAs.Name = "bnDecodeAs";
             this.bnDecodeAs.Size = new System.Drawing.Size(75, 23);
             this.bnDecodeAs.TabIndex = 6;
@@ -130,8 +130,8 @@
             // splitContainer1.Panel2
             // 
             this.splitContainer1.Panel2.Controls.Add(this.rtbData);
-            this.splitContainer1.Size = new System.Drawing.Size(849, 401);
-            this.splitContainer1.SplitterDistance = 82;
+            this.splitContainer1.Size = new System.Drawing.Size(650, 414);
+            this.splitContainer1.SplitterDistance = 84;
             this.splitContainer1.TabIndex = 7;
             // 
             // ProtoBufInspectorControl
@@ -140,7 +140,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.splitContainer1);
             this.Name = "ProtoBufInspectorControl";
-            this.Size = new System.Drawing.Size(849, 401);
+            this.Size = new System.Drawing.Size(650, 414);
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel1.PerformLayout();
             this.splitContainer1.Panel2.ResumeLayout(false);
