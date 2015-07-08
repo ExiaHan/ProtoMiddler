@@ -55,4 +55,18 @@ namespace ProtoMiddler.ProtoGen
             return files;
         }
     }
+
+    public static class FileDescriptorSetOrderTypeByNameExtension
+    {
+        public static IEnumerable<Tuple<string, string>> OrderByName(this FileDescriptorSet files,
+            bool orderByPackageName = false)
+        {
+            IEnumerable<FileDescriptorProto> enumerable = files.file;
+            if (orderByPackageName) enumerable = files.file.OrderBy(o => o.package);
+            return enumerable
+                .SelectMany(o => o.message_type
+                    .OrderBy(t => t.name)
+                    .Select(t => Tuple.Create(o.package, t.name)));
+        }
+    }
 }

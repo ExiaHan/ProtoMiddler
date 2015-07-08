@@ -1,14 +1,15 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Windows.Forms;
+using ProtoMiddler.ProtoGen;
 
 namespace ProtoMiddler
 {
     public partial class ProtoBufInspectorControl : UserControl
     {
-        public string MessageType;
-        public string ProtoFile;
+        string MessageType;
+        string ProtoFile;
 
         public ProtoBufInspectorControl()
         {
@@ -48,19 +49,9 @@ namespace ProtoMiddler
                 // also parse the proto file to fill in the cbType combo box
                 if (File.Exists(ProtoFile))
                 {
-                    string rawProtoFile = File.ReadAllText(ProtoFile);
-                    string[] tokens = rawProtoFile.Split(" \r\t\n{},".ToCharArray(),
-                        StringSplitOptions.RemoveEmptyEntries);
-                    var list = new List<string>();
-                    for (int x = 0; x < tokens.Length; x++)
-                    {
-                        if (tokens[x].CompareTo("message") == 0)
-                        {
-                            string t = tokens[x + 1];
-                            list.Add(t.Trim());
-                        }
-                    }
-                    list.Sort();
+                    var list = new ProtoLoader(ProtoFile).LoadTypes()
+                        .OrderByName(true)
+                        .Select(o => string.Join(".", o.Item1, o.Item2));
                     cbType.Items.AddRange(list.ToArray());
                     cbType.Enabled = true;
                 }
