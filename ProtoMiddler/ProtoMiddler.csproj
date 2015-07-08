@@ -40,6 +40,9 @@
     <Reference Include="protobuf-net">
       <HintPath>..\packages\protobuf-net.2.0.0.668\lib\net40\protobuf-net.dll</HintPath>
     </Reference>
+    <Reference Include="protogen">
+      <HintPath>C:\cygwin\Opt\protobuf-net\protogen.exe</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
@@ -56,7 +59,6 @@
     <Compile Include="ProtoBufInspectorControl.Designer.cs">
       <DependentUpon>ProtoBufInspectorControl.cs</DependentUpon>
     </Compile>
-    <Compile Include="ProtoGen\descriptor.proto.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="ProtoBufInspectorControl.resx">
