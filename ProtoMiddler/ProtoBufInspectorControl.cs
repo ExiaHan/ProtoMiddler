@@ -72,7 +72,11 @@ namespace ProtoMiddler
             MessageType = (string) cbType.SelectedItem;
             ProtoFile = txtProtoFile.Text;
 
-            Data = ProtoBufUtil.DecodeWithProto(ProtobufBytes, MessageType, ProtoFile);
+            if (!string.IsNullOrWhiteSpace(ProtoFile) &&
+                !string.IsNullOrWhiteSpace(MessageType))
+            {
+                Data = ProtoBufUtil.DecodeWithProto(ProtobufBytes, MessageType, ProtoFile);
+            }
         }
     }
 }
