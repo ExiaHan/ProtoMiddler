@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Runtime.Serialization;
 using System.Windows.Forms;
 using ProtoMiddler.ProtoGen;
 
@@ -16,8 +17,7 @@ namespace ProtoMiddler
         public ProtoBufInspectorControl()
         {
             InitializeComponent();
-            ProtoFile = string.Empty;
-            MessageType = string.Empty;
+            InitializeLastUsedTypes();
         }
 
         public byte[] ProtobufBytes { get; set; }
@@ -25,7 +25,6 @@ namespace ProtoMiddler
         public string Data
         {
             get { return rtbData.Text; }
-
             set { rtbData.Text = value; }
         }
 
@@ -110,6 +109,78 @@ namespace ProtoMiddler
                     {
                         cbType.SelectedItem = value;
                     }
+                }
+            }
+        }
+
+        void InitializeLastUsedTypes()
+        {
+            try
+            {
+                ProtoMiddlerState.Deserialize(this);
+                Application.ApplicationExit += (sender, e) =>
+                {
+                    try
+                    {
+                        ProtoMiddlerState.Serialize(this);
+                    }
+                    catch
+                    {
+                    }
+                };
+            }
+            catch
+            {
+            }
+        }
+
+        [DataContract]
+        public class ProtoMiddlerState
+        {
+            const string TempFile = "ProtoMiddlerState.tmp";
+
+            [DataMember]
+            public Dictionary<string, string> LastUsedTypes { get; set; }
+
+            [DataMember]
+            public string LastUsedPath { get; set; }
+
+            internal static void Deserialize(ProtoBufInspectorControl @this, string filename = TempFile)
+            {
+                var file = Path.Combine(Path.GetTempPath(), filename);
+                if (File.Exists(file))
+                {
+                    using (var fs = File.OpenRead(file))
+                    {
+                        var ds = new DataContractSerializer(typeof (ProtoMiddlerState));
+                        var state = ds.ReadObject(fs) as ProtoMiddlerState;
+                        if (state != null)
+                        {
+                            @this.ProtoFile = state.LastUsedPath;
+                            if (state.LastUsedTypes != null)
+                            {
+                                foreach (var pair in state.LastUsedTypes)
+                                {
+                                    @this._lastUsedTypes.Add(pair.Key, pair.Value);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            internal static void Serialize(ProtoBufInspectorControl @this, string filename = TempFile)
+            {
+                var state = new ProtoMiddlerState
+                {
+                    LastUsedPath = @this.ProtoFile,
+                    LastUsedTypes = @this._lastUsedTypes,
+                };
+                var file = Path.Combine(Path.GetTempPath(), filename);
+                using (var fs = File.OpenWrite(file))
+                {
+                    var ds = new DataContractSerializer(typeof (ProtoMiddlerState));
+                    ds.WriteObject(fs, state);
                 }
             }
         }
