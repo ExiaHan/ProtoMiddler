@@ -1,4 +1,7 @@
-﻿namespace ProtoMiddler
+﻿using System;
+using System.Windows.Forms;
+
+namespace ProtoMiddler
 {
     partial class ProtoBufInspectorControl
     {
@@ -100,6 +103,7 @@
             this.cbType.Name = "cbType";
             this.cbType.Size = new System.Drawing.Size(450, 21);
             this.cbType.TabIndex = 5;
+            this.cbType.SelectedIndexChanged += cbType_OnSelectedIndexChanged;
             // 
             // bnDecodeAs
             // 

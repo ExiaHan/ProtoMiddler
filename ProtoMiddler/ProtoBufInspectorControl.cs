@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
@@ -8,6 +9,7 @@ namespace ProtoMiddler
 {
     public partial class ProtoBufInspectorControl : UserControl
     {
+        readonly Dictionary<string, string> _lastUsedTypes = new Dictionary<string, string>();
         string MessageType;
         string ProtoFile;
 
@@ -64,6 +66,7 @@ namespace ProtoMiddler
                     .OrderByName(true);
                 cbType.Items.AddRange(list.ToArray());
                 cbType.Enabled = true;
+                SetLastUsedType();
             }
         }
 
@@ -76,6 +79,38 @@ namespace ProtoMiddler
                 !string.IsNullOrWhiteSpace(MessageType))
             {
                 Data = ProtoBufUtil.DecodeWithProto(ProtobufBytes, MessageType, ProtoFile);
+            }
+        }
+
+        void cbType_OnSelectedIndexChanged(object sender, EventArgs eventArgs)
+        {
+            var file = txtProtoFile.Text;
+            var type = (string) cbType.SelectedItem;
+            if (file != null)
+            {
+                var key = Path.GetFileName(file).Trim();
+                if (!string.IsNullOrEmpty(key) &&
+                    !string.IsNullOrWhiteSpace(type))
+                {
+                    _lastUsedTypes[key] = type.Trim();
+                }
+            }
+        }
+
+        void SetLastUsedType()
+        {
+            var file = txtProtoFile.Text;
+            if (file != null)
+            {
+                var key = Path.GetFileName(file).Trim();
+                if (_lastUsedTypes.ContainsKey(key))
+                {
+                    var value = _lastUsedTypes[key];
+                    if (cbType.Items.Contains(value))
+                    {
+                        cbType.SelectedItem = value;
+                    }
+                }
             }
         }
     }
