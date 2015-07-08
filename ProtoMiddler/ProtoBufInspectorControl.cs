@@ -42,6 +42,7 @@ namespace ProtoMiddler
 
         void bnBrowse_Click(object sender, EventArgs e)
         {
+            openFileDialog1.FileName = ProtoFile;
             if (DialogResult.OK == openFileDialog1.ShowDialog())
             {
                 txtProtoFile.Text = openFileDialog1.FileName;
@@ -79,6 +80,8 @@ namespace ProtoMiddler
             {
                 Data = ProtoBufUtil.DecodeWithProto(ProtobufBytes, MessageType, ProtoFile);
             }
+
+            ProtoMiddlerState.Serialize(this);
         }
 
         void cbType_OnSelectedIndexChanged(object sender, EventArgs eventArgs)
@@ -118,10 +121,12 @@ namespace ProtoMiddler
             try
             {
                 ProtoMiddlerState.Deserialize(this);
+                txtProtoFile.Text = ProtoFile;
                 Application.ApplicationExit += (sender, e) =>
                 {
                     try
                     {
+                        ProtoFile = txtProtoFile.Text;
                         ProtoMiddlerState.Serialize(this);
                     }
                     catch
