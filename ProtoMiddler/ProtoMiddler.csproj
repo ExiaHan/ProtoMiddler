@@ -63,6 +63,7 @@
     <Compile Include="ProtoBufInspectorControl.Designer.cs">
       <DependentUpon>ProtoBufInspectorControl.cs</DependentUpon>
     </Compile>
+    <Compile Include="ProtoGen\FileDescriptorSetOrderTypeByNameExtension.cs" />
     <Compile Include="ProtoGen\ProtoLoader.cs" />
   </ItemGroup>
   <ItemGroup>

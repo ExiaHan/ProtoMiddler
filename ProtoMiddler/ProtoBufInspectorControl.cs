@@ -50,8 +50,7 @@ namespace ProtoMiddler
                 if (File.Exists(ProtoFile))
                 {
                     var list = new ProtoLoader(ProtoFile).LoadTypes()
-                        .OrderByName(true)
-                        .Select(o => string.Join(".", o.Item1, o.Item2));
+                        .OrderByName(true);
                     cbType.Items.AddRange(list.ToArray());
                     cbType.Enabled = true;
                 }
