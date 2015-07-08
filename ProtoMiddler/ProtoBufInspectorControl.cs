@@ -13,11 +13,11 @@ namespace ProtoMiddler
         readonly Dictionary<string, string> _lastUsedTypes = new Dictionary<string, string>();
         string MessageType;
         string ProtoFile;
+        bool initialized;
 
         public ProtoBufInspectorControl()
         {
             InitializeComponent();
-            InitializeLastUsedTypes();
         }
 
         public byte[] ProtobufBytes { get; set; }
@@ -26,6 +26,12 @@ namespace ProtoMiddler
         {
             get { return rtbData.Text; }
             set { rtbData.Text = value; }
+        }
+
+        protected override void OnLoad(EventArgs e)
+        {
+            base.OnLoad(e);
+            InitializeLastUsedTypes();
         }
 
         public byte[] Encode()
@@ -118,15 +124,18 @@ namespace ProtoMiddler
 
         void InitializeLastUsedTypes()
         {
+            if (initialized) return;
             try
             {
                 ProtoMiddlerState.Deserialize(this);
+                // cannot set values before OnLoad
                 txtProtoFile.Text = ProtoFile;
+                UpdateTypeList();
                 Application.ApplicationExit += (sender, e) =>
                 {
                     try
                     {
-                        ProtoFile = txtProtoFile.Text;
+                        // cannot use values from UI while exiting
                         ProtoMiddlerState.Serialize(this);
                     }
                     catch
@@ -137,6 +146,7 @@ namespace ProtoMiddler
             catch
             {
             }
+            initialized = true;
         }
 
         [DataContract]
@@ -166,7 +176,10 @@ namespace ProtoMiddler
                             {
                                 foreach (var pair in state.LastUsedTypes)
                                 {
-                                    @this._lastUsedTypes.Add(pair.Key, pair.Value);
+                                    if (!@this._lastUsedTypes.ContainsKey(pair.Key))
+                                    {
+                                        @this._lastUsedTypes[pair.Key] = pair.Value;
+                                    }
                                 }
                             }
                         }
@@ -181,12 +194,13 @@ namespace ProtoMiddler
                     LastUsedPath = @this.ProtoFile,
                     LastUsedTypes = @this._lastUsedTypes,
                 };
-                var file = Path.Combine(Path.GetTempPath(), filename);
+                var file = Path.GetTempFileName();
                 using (var fs = File.OpenWrite(file))
                 {
                     var ds = new DataContractSerializer(typeof (ProtoMiddlerState));
                     ds.WriteObject(fs, state);
                 }
+                File.Replace(file, Path.Combine(Path.GetTempPath(), filename), null);
             }
         }
     }
