@@ -46,14 +46,24 @@ namespace ProtoMiddler
                 txtProtoFile.Text = openFileDialog1.FileName;
 
                 ProtoFile = txtProtoFile.Text.Trim();
-                // also parse the proto file to fill in the cbType combo box
-                if (File.Exists(ProtoFile))
-                {
-                    var list = new ProtoLoader(ProtoFile).LoadTypes()
-                        .OrderByName(true);
-                    cbType.Items.AddRange(list.ToArray());
-                    cbType.Enabled = true;
-                }
+                UpdateTypeList();
+            }
+        }
+
+        /// <summary>
+        ///     parse the proto file to fill in the cbType combo box
+        /// </summary>
+        void UpdateTypeList()
+        {
+            cbType.Enabled = false;
+            cbType.SelectedItem = null;
+            cbType.Items.Clear();
+            if (File.Exists(ProtoFile))
+            {
+                var list = new ProtoLoader(ProtoFile).LoadTypes()
+                    .OrderByName(true);
+                cbType.Items.AddRange(list.ToArray());
+                cbType.Enabled = true;
             }
         }
 
