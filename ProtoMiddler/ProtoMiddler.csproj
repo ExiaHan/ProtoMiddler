@@ -56,6 +56,7 @@
     <Compile Include="ProtoBufInspectorControl.Designer.cs">
       <DependentUpon>ProtoBufInspectorControl.cs</DependentUpon>
     </Compile>
+    <Compile Include="ProtoGen\descriptor.proto.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="ProtoBufInspectorControl.resx">
